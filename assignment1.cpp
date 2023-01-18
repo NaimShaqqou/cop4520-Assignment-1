@@ -3,6 +3,7 @@
 #include <vector>
 #include <chrono>
 #include <atomic>
+#include <iomanip>
 
 #include <map>
 
@@ -77,9 +78,9 @@ int main()
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
 
-    cout << "sum of the prime numbers under " << MAX_NUM << ": " << sumOfPrimes << endl
-         << "number of prime numbers under " << MAX_NUM << ": " << numOfPrimes << endl
-         << "duration: " << duration.count() << " ms" << endl;
+    cout << "Duration: " << duration.count() << " ms" << endl;
+    cout << "Total number of primes found: " << numOfPrimes << endl;
+    cout << "Sum of all primes found: " << sumOfPrimes << endl;
     
     // for (int n = 0; n < NUM_THREADS; n++) {
     //     cout << "Thread " << n + 1 << ": " << array[n] << endl;
