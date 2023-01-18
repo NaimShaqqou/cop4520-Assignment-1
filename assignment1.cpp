@@ -3,7 +3,7 @@
 #include <vector>
 #include <chrono>
 #include <atomic>
-#include <iomanip>
+#include <sstream>
 
 #include <map>
 
@@ -33,13 +33,22 @@ bool isPrime(int n)
 int main()
 {
     vector<thread> threads;
-    int largestPrimes[10];
+    long int largestPrimes[10];
 
-    // long int array[NUM_THREADS];
+    atomic<unsigned long> array[NUM_THREADS];
+    array[0] = 0;
+    array[1] = 0;
+    array[2] = 0;
+    array[3] = 0;
+    array[4] = 0;
+    array[5] = 0;
+    array[6] = 0;
+    array[7] = 0;
     // map<thread::id, int> m;
+    map<string, int> m;
 
     atomic<int> counter{MAX_NUM};
-    atomic<long int> sumOfPrimes{0};
+    atomic<long long> sumOfPrimes{0};
     atomic<int> numOfPrimes{0};
 
     auto findPrimes = [&]()
@@ -49,7 +58,7 @@ int main()
         {
             auto cur = counter--;
 
-            if (cur > 2 && isPrime(cur))
+            if (cur >= 2 && isPrime(cur))
             {   
                 // if (numOfPrimes <= 10)
                 //     largestPrimes.push_back(cur);
@@ -60,9 +69,11 @@ int main()
                 sumOfPrimes += cur;
                 numOfPrimes++;
 
-                
-                // if (m.find(this_thread::get_id()) != m.end())
-                //     array[m[this_thread::get_id()]]++;
+                stringstream ss;
+                ss << this_thread::get_id();
+                string id = ss.str();
+                // if (m.find(id) != m.end())
+                    array[m[id]]++;
             }
         }
     };
@@ -72,8 +83,11 @@ int main()
     for (int i = 0; i < NUM_THREADS; i++)
     {
         threads.emplace_back(findPrimes);
-        // m[threads[i].get_id()] = i;
-        // cout << threads[i].get_id() << endl;
+        stringstream ss;
+        ss << threads[i].get_id();
+        string id = ss.str();
+        m[id] = i;
+        cout << id << " " << i << endl;
     }
 
     for (auto &t : threads)
@@ -88,9 +102,14 @@ int main()
     cout << "Total number of primes found: " << numOfPrimes << endl;
     cout << "Sum of all primes found: " << sumOfPrimes << endl;
     
-    // for (int n = 0; n < NUM_THREADS; n++) {
-    //     cout << "Thread " << n + 1 << ": " << array[n] << endl;
-    // }
+    unsigned long sum = 0;
+    cout << "Number of primes found by each thread:" << endl;
+    for (int n = 0; n < NUM_THREADS; n++) {
+        sum += array[n];
+        cout << "Thread " << n + 1 << ": " << array[n] << endl;
+    }
+
+    cout << "SUM: " << sum << endl;
 
     cout << "10 Largest Prime Numbers:" << endl;
     for (int i = 0; i < 10; i++) {
