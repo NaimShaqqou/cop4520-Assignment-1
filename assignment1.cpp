@@ -33,7 +33,8 @@ bool isPrime(int n)
 int main()
 {
     vector<thread> threads;
-    vector<int> largestPrimes;
+    int largestPrimes[10];
+
     // long int array[NUM_THREADS];
     // map<thread::id, int> m;
 
@@ -48,13 +49,18 @@ int main()
         {
             auto cur = counter--;
 
-            if (cur < MAX_NUM && isPrime(cur))
+            if (cur > 2 && isPrime(cur))
             {   
+                // if (numOfPrimes <= 10)
+                //     largestPrimes.push_back(cur);
+
+                if (numOfPrimes < 10)
+                    largestPrimes[numOfPrimes] = cur;
+
                 sumOfPrimes += cur;
                 numOfPrimes++;
 
-                if (numOfPrimes <= 10)
-                    largestPrimes.emplace_back(cur);
+                
                 // if (m.find(this_thread::get_id()) != m.end())
                 //     array[m[this_thread::get_id()]]++;
             }
@@ -90,5 +96,6 @@ int main()
     for (int i = 0; i < 10; i++) {
         cout  << i + 1 << ") " << largestPrimes[i] << endl;
     }
+
     return 0;
 }
