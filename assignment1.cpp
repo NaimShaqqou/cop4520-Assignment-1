@@ -4,6 +4,8 @@
 #include <chrono>
 #include <atomic>
 
+#include <map>
+
 #define MAX_NUM 100000000
 #define NUM_THREADS 8
 
@@ -30,21 +32,30 @@ bool isPrime(int n)
 int main()
 {
     vector<thread> threads;
+    vector<int> largestPrimes;
+    // long int array[NUM_THREADS];
+    // map<thread::id, int> m;
 
-    atomic<int> counter{2};
-    atomic<long int> sumOfPrimes = 0;
-    atomic<int> numOfPrimes = 0;
+    atomic<int> counter{MAX_NUM};
+    atomic<long int> sumOfPrimes{0};
+    atomic<int> numOfPrimes{0};
 
     auto findPrimes = [&]()
     {
-        while (counter <= MAX_NUM)
+        // while (counter <= MAX_NUM)
+        while (counter >= 2)
         {
-            auto cur = counter++;
+            auto cur = counter--;
 
             if (cur < MAX_NUM && isPrime(cur))
             {   
                 sumOfPrimes += cur;
                 numOfPrimes++;
+
+                if (numOfPrimes <= 10)
+                    largestPrimes.emplace_back(cur);
+                // if (m.find(this_thread::get_id()) != m.end())
+                //     array[m[this_thread::get_id()]]++;
             }
         }
     };
@@ -54,6 +65,8 @@ int main()
     for (int i = 0; i < NUM_THREADS; i++)
     {
         threads.emplace_back(findPrimes);
+        // m[threads[i].get_id()] = i;
+        // cout << threads[i].get_id() << endl;
     }
 
     for (auto &t : threads)
@@ -67,6 +80,14 @@ int main()
     cout << "sum of the prime numbers under " << MAX_NUM << ": " << sumOfPrimes << endl
          << "number of prime numbers under " << MAX_NUM << ": " << numOfPrimes << endl
          << "duration: " << duration.count() << " ms" << endl;
+    
+    // for (int n = 0; n < NUM_THREADS; n++) {
+    //     cout << "Thread " << n + 1 << ": " << array[n] << endl;
+    // }
 
+    cout << "10 Largest Prime Numbers:" << endl;
+    for (int i = 0; i < 10; i++) {
+        cout  << i + 1 << ") " << largestPrimes[i] << endl;
+    }
     return 0;
 }
