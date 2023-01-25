@@ -4,7 +4,7 @@ This is a program that uses parallel processing concepts learned in class to fin
 
 ## Approach
 
-The program spawns 8 threads, as per assignment requirements. Each thread processes a disjoint set of integers between `0` and `10^8`.
+The program spawns 8 threads, as per assignment requirements. Each thread processes a disjoint set of integers between `2` and `10^8`.
 
 The approach uses an `O(sqrt(n))` primality check. The algorithm demonstrates the power of multithreading through the efficiency we were able to achieve by using multiple threads.
 
