@@ -62,17 +62,6 @@ int main()
 
     auto start = high_resolution_clock::now();
 
-    int startValues[] = {3, 5, 7, 9, 11, 13, 15, 17};
-    // for (int i = 0; i < NUM_THREADS; i++)
-    // {
-    //     threads.emplace_back(findPrimes, startValues[i]);
-    // }
-
-    // for (auto &t : threads)
-    // {
-    //     t.join();
-    // }
-
     thread one = thread(findPrimes, 3);
     thread two = thread(findPrimes, 5);
     thread three = thread(findPrimes, 7);
