@@ -3,13 +3,9 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
-// #include <cstring>
-// #include <functional>
-
-#include <map>
+#include <cstring>
 
 #define MAX_NUM 100000000
-#define NUM_THREADS 8
 
 using namespace std;
 using namespace std::chrono;
@@ -60,8 +56,14 @@ int main()
 
     memset(prime, false, sizeof(prime));
 
+    ofstream out;
+    out.open("primes.txt");
+
+    // Start timer before thread spawning
     auto start = high_resolution_clock::now();
 
+    // Hardcoding the 8 threads provides a 
+    // VERY SLIGHT performance boost
     thread one = thread(findPrimes, 3);
     thread two = thread(findPrimes, 5);
     thread three = thread(findPrimes, 7);
@@ -80,19 +82,11 @@ int main()
     seven.join();
     eight.join();
 
+    // end timer after thread execution
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
 
-    cout << duration.count() / 1e+3 << "s" << " " << numOfPrimes << " " << sumOfPrimes << endl;
-    
-    // unsigned long sum = 0;
-    // cout << "Number of primes found by each thread:" << endl;
-    // for (int n = 0; n < NUM_THREADS; n++) {
-    //     sum += arr[n];
-    //     cout << "Thread " << n + 1 << ": " << arr[n] << endl;
-    // }
-
-    // cout << "SUM: " << sum << endl;
+    out << duration.count() / 1e+3 << "s" << " " << numOfPrimes << " " << sumOfPrimes << endl;
 
     int cnt = 0;
     for (int i = MAX_NUM; i > 0 && cnt <= 10; i--) {
@@ -104,7 +98,8 @@ int main()
     }
 
     for (int j = 0; j < 10; j++)
-        cout << largestPrimes[j] << " ";
+        out << largestPrimes[j] << " ";
 
+    out.close();
     return 0;
 }
