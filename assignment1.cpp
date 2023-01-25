@@ -19,9 +19,6 @@ using namespace std::chrono;
 atomic<long long> sumOfPrimes{0};
 atomic<int> numOfPrimes{0};
 
-map<string, int> m;
-// atomic<unsigned long> arr[NUM_THREADS];
-
 bool isPrime(int n)
 {
     if (n == 2 || n == 3)
@@ -41,7 +38,6 @@ bool isPrime(int n)
 
 void findPrimes(int start) 
 {
-    cout << "start at: " << start << endl;
     int sum = 0;
     int num = 0;
     for (int i = start; i < 1e+8; i = i + 16)
@@ -50,12 +46,6 @@ void findPrimes(int start)
         {
             sum += i;
             num++;
-
-            // stringstream ss;
-            // ss << this_thread::get_id();
-            // string id = ss.str();
-            // // if (m.find(id) != m.end())
-            // arr[m[id]]++;
         }
     }
 
@@ -68,68 +58,38 @@ int main()
     vector<thread> threads;
     long int largestPrimes[10];
 
-    // atomic<unsigned long> arr[NUM_THREADS];
-    // arr[0] = 0;
-    // arr[1] = 0;
-    // arr[2] = 0;
-    // arr[3] = 0;
-    // arr[4] = 0;
-    // arr[5] = 0;
-    // arr[6] = 0;
-    // arr[7] = 0;
-    // map<thread::id, int> m;
-    // map<string, int> m;
-
     atomic<int> counter{MAX_NUM};
-    // atomic<long long> sumOfPrimes{0};
-    // atomic<int> numOfPrimes{0};
-
-    // auto findPrimes = [&]()
-    // {
-    //     // while (counter <= MAX_NUM)
-    //     while (counter >= 2)
-    //     {
-    //         auto cur = atomic_fetch_sub(&counter, 2);
-
-    //         if (cur >= 2 && isPrime(cur))
-    //         {   
-    //             // if (numOfPrimes <= 10)
-    //             //     largestPrimes.push_back(cur);
-
-    //             if (numOfPrimes < 10)
-    //                 largestPrimes[numOfPrimes] = cur;
-
-    //             sumOfPrimes += cur;
-    //             numOfPrimes++;
-
-    //             stringstream ss;
-    //             ss << this_thread::get_id();
-    //             string id = ss.str();
-    //             // if (m.find(id) != m.end())
-    //                 array[m[id]]++;
-    //         }
-    //     }
-    // };
 
     auto start = high_resolution_clock::now();
 
     int startValues[] = {3, 5, 7, 9, 11, 13, 15, 17};
-    for (int i = 0; i < NUM_THREADS; i++)
-    {
-        threads.push_back(thread(findPrimes, startValues[i]));
-        // stringstream ss;
-        // ss << threads[i].get_id();
-        // string id = ss.str();
-        // m[id] = i;
-        // cout << id << " " << i << endl;
-    }
-
-    for_each(threads.begin(), threads.end(), mem_fn(&thread::join));
+    // for (int i = 0; i < NUM_THREADS; i++)
+    // {
+    //     threads.emplace_back(findPrimes, startValues[i]);
+    // }
 
     // for (auto &t : threads)
     // {
     //     t.join();
     // }
+
+    thread one = thread(findPrimes, 3);
+    thread two = thread(findPrimes, 5);
+    thread three = thread(findPrimes, 7);
+    thread four = thread(findPrimes, 9);
+    thread five = thread(findPrimes, 11);
+    thread six = thread(findPrimes, 13);
+    thread seven = thread(findPrimes, 15);
+    thread eight = thread(findPrimes, 17);
+
+    one.join();
+    two.join();
+    three.join();
+    four.join();
+    five.join();
+    six.join();
+    seven.join();
+    eight.join();
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
