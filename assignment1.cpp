@@ -1,12 +1,10 @@
 #include <iostream>
+#include <fstream>
 #include <thread>
-#include <vector>
 #include <chrono>
 #include <atomic>
-#include <sstream>
-#include <algorithm>
-#include <cstring>
-#include <functional>
+// #include <cstring>
+// #include <functional>
 
 #include <map>
 
@@ -16,8 +14,10 @@
 using namespace std;
 using namespace std::chrono;
 
-atomic<long long> sumOfPrimes{0};
-atomic<int> numOfPrimes{0};
+// Account for the fact that 2 is a prime number
+atomic<long long> sumOfPrimes{2};
+atomic<int> numOfPrimes{1};
+bool prime[MAX_NUM + 1];
 
 bool isPrime(int n)
 {
@@ -46,6 +46,7 @@ void findPrimes(int start)
         {
             sum += i;
             num++;
+            prime[i] = true;
         }
     }
 
@@ -55,10 +56,9 @@ void findPrimes(int start)
 
 int main()
 {
-    vector<thread> threads;
-    long int largestPrimes[10];
+    int largestPrimes[10];
 
-    atomic<int> counter{MAX_NUM};
+    memset(prime, false, sizeof(prime));
 
     auto start = high_resolution_clock::now();
 
@@ -83,9 +83,7 @@ int main()
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
 
-    cout << "Duration: " << duration.count() << " ms" << endl;
-    cout << "Total number of primes found: " << numOfPrimes << endl;
-    cout << "Sum of all primes found: " << sumOfPrimes << endl;
+    cout << duration.count() / 1e+3 << "s" << " " << numOfPrimes << " " << sumOfPrimes << endl;
     
     // unsigned long sum = 0;
     // cout << "Number of primes found by each thread:" << endl;
@@ -96,10 +94,17 @@ int main()
 
     // cout << "SUM: " << sum << endl;
 
-    cout << "10 Largest Prime Numbers:" << endl;
-    for (int i = 0; i < 10; i++) {
-        cout  << i + 1 << ") " << largestPrimes[i] << endl;
+    int cnt = 0;
+    for (int i = MAX_NUM; i > 0 && cnt <= 10; i--) {
+        if (prime[i])
+        {
+            cnt++;
+            largestPrimes[10 - cnt] = i;
+        }
     }
+
+    for (int j = 0; j < 10; j++)
+        cout << largestPrimes[j] << " ";
 
     return 0;
 }
