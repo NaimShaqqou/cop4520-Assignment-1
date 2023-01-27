@@ -6,6 +6,10 @@ This is a program that uses parallel processing concepts learned in class to fin
 
 The program spawns 8 threads, as per assignment requirements. Each thread processes a disjoint set of integers between `2` and `10^8`. This ensures that no two threads are processing the same number, and it allows us to take full advantage of the multiple threads we have access to.
 
+We make sure to skip over even numbers, since all of them are composite (except for 2). Each thread starts processing at different odd number between `3` and `17`. In each thread, we increase the counter by 16 to ensure that no two threads process the same number. Note that the counter is not shared between the threads; each thread has its own counter that starts at a unique odd number. In this manner, we don't have to implement mutual exclusion for the counter variable.
+
+However, we do need to implement mutual exclusion for the variables that keep track of the prime numbers we found. This makes sure we don't run into race-conditions by preventing multiple threads modifying the variables at the same time. 
+
 The approach uses an `O(sqrt(n))` primality check to process each integer. The algorithm demonstrates the power of multithreading through the efficiency we were able to achieve by using multiple threads.
 
 The runtime for this program is around `3 seconds` using the approach outlined above.
