@@ -34,9 +34,9 @@ bool isPrime(int n)
 
 void findPrimes(int start) 
 {
-    int sum = 0;
+    long long sum = 0;
     int num = 0;
-    for (int i = start; i < 1e+8; i = i + 16)
+    for (int i = start; i <= 1e+8; i = i + 16)
     {
         if (isPrime(i))
         {
